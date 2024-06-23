@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/charmbracelet/log"
@@ -11,6 +12,7 @@ type LogLevel int
 const (
 	DebugLevel LogLevel = iota
 	InfoLevel
+	SuccessLevel
 	WarnLevel
 	ErrorLevel
 	FatalLevel
@@ -21,7 +23,15 @@ type CustomLogger struct {
 }
 
 func (l LogLevel) String() string {
-	return [...]string{"DEBUG", "INFO", "WARN", "ERROR", "FATAL"}[l]
+	return [...]string{"DEBUG", "INFO", "SUCCESS", "WARN", "ERROR", "FATAL"}[l]
+}
+
+func (c *CustomLogger) Success(msg interface{}, keyvals ...interface{}) {
+	c.Logger.Log(log.Level(SuccessLevel), msg, keyvals...)
+}
+
+func (c *CustomLogger) Successf(format string, args ...interface{}) {
+	c.Logger.Log(log.Level(SuccessLevel), fmt.Sprintf(format, args...))
 }
 
 func NewCustomLogger(packageName string) *CustomLogger {
@@ -41,6 +51,8 @@ func (c *CustomLogger) Log(message *MessageWrapper) {
 		c.Debug(message.Message)
 	case InfoLevel:
 		c.Info(message.Message)
+	case SuccessLevel:
+		c.Success(message.Message)
 	case WarnLevel:
 		c.Warn(message.Message)
 	case ErrorLevel:
@@ -52,9 +64,13 @@ func (c *CustomLogger) Log(message *MessageWrapper) {
 	}
 }
 
-func Initialize() {
+func Initialize(verbose bool) {
 	DefaultLogger.Log(MsgInitializing)
 
-	log.SetLevel(log.DebugLevel)
+	if verbose {
+		DefaultLogger.Debug("running in verbose mode")
+		DefaultLogger.SetLevel(log.DebugLevel)
+	}
+
 	log.SetStyles(GetDefaultLoggerStyle())
 }

@@ -20,6 +20,11 @@ func GetPackageLoggerStyle(packageName string) *log.Styles {
 		Padding(0, 1, 0, 1).
 		Foreground(lipgloss.Color("#CCCCCC")).
 		Bold(true)
+	styles.Levels[log.Level(SuccessLevel)] = lipgloss.NewStyle().
+		SetString(fmt.Sprintf("[SUCC] [%s]", packageName)).
+		Padding(0, 1, 0, 1).
+		Foreground(lipgloss.Color("#00FF00")).
+		Bold(true)
 	styles.Levels[log.WarnLevel] = lipgloss.NewStyle().
 		SetString(fmt.Sprintf("[WARN] [%s]", packageName)).
 		Padding(0, 1, 0, 1).
@@ -52,6 +57,11 @@ func GetDefaultLoggerStyle() *log.Styles {
 		SetString("[INFO]").
 		Padding(0, 1, 0, 1).
 		Foreground(lipgloss.Color("#CCCCCC")).
+		Bold(true)
+	styles.Levels[log.Level(SuccessLevel)] = lipgloss.NewStyle().
+		SetString("[SUCC]").
+		Padding(0, 1, 0, 1).
+		Foreground(lipgloss.Color("#00FF00")).
 		Bold(true)
 	styles.Levels[log.WarnLevel] = lipgloss.NewStyle().
 		SetString("[WARN]").

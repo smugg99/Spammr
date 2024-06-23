@@ -3,7 +3,7 @@ package configurator
 import (
 	"os"
 
-	"smuggr.xyz/wkurwiaczo-inator/common/logger"
+	"smuggr.xyz/spammr/common/logger"
 
 	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
