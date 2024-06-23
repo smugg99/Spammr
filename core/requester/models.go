@@ -20,3 +20,15 @@ type RequestTemplate struct {
 	Body    string            `json:"body"`
 	Wants   []Want            `json:"wants"`
 }
+
+type ResponseDetails struct {
+	StatusCode int               `json:"status_code"`
+	Headers    map[string]string `json:"headers"`
+	Body       string            `json:"body"`
+}
+
+type ResponseLog struct {
+	StatusCode int               `json:"status_code"`
+	Headers    map[string]string `json:"headers"`
+	Body       string            `json:"body"`
+}

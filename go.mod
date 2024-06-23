@@ -5,7 +5,9 @@ go 1.22.3
 require github.com/google/brotli/go/cbrotli v0.0.0-20240531161123-a528bce9f65b
 
 require (
+	github.com/brianvoe/gofakeit/v7 v7.0.4 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
+	github.com/google/uuid v1.6.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
