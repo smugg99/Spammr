@@ -66,7 +66,7 @@ func Initialize(runFunc func(cmd *cobra.Command, args []string)) {
 
 func ExecuteRootCommand() {
 	if err := RootCmd.Execute(); err != nil {
-		Logger.Errorf("error while executing command: %v", err)
+		// Logger.Errorf("error while executing command: %v", err)
 		os.Exit(1)
 	}
 }

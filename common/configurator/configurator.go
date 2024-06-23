@@ -18,7 +18,7 @@ func loadEnv() *logger.MessageWrapper {
 		return logger.ErrReadingResource.Format("", logger.ResourceEnv)
 	}
 
-	return logger.MsgResourceLoaded.Format(".env", logger.ResourceEnv)
+	return logger.MsgResourceLoaded.Format(os.Getenv("REQUEST_TEMPLATE_EXTENSION"), logger.ResourceEnv)
 }
 
 func loadConfig(config *GlobalConfig) *logger.MessageWrapper {
