@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 
 	"smuggr.xyz/spammr/common/configurator"
 	"smuggr.xyz/spammr/common/logger"
@@ -22,25 +23,36 @@ var RequestTemplates map[string]RequestTemplate
 func Initialize(cmdFlags configurator.CmdFlags) {
 	Logger.Log(logger.MsgInitializing)
 
-	if requestTemplates, err := LoadRequestTemplates(""); err != nil {
+	if requestTemplates, err := LoadRequestTemplates(cmdFlags.RequestsDir); err != nil {
 		Logger.Errorf("failed to load request templates: %v", err.Error())
 	} else {
 		RequestTemplates = requestTemplates
 	}
 
-	// templateName := "alians.oze.pl"
-	// if template, ok := RequestTemplates[templateName]; ok {
-	// 	if _, err := SendRequest(&template); err != nil {
-	// 		Logger.Errorf("failed to send request template: %v", err.Error())
-	// 	}
-	// } else {
-	// 	Logger.Log(logger.ErrResourceNotFound.Format(templateName, logger.ResourceRequestTemplate))
-	// }
-
 	Logger.Log(logger.MsgInitialized)
+
+	SendRequests()
+}
+
+func SendRequests() {
+    var wg sync.WaitGroup
+
+    for _, template := range RequestTemplates {
+        wg.Add(1)
+        go func(template RequestTemplate) {
+            defer wg.Done()
+            if _, err := SendRequest(&template); err != nil {
+                Logger.Printf("failed to send request template: %v", err.Error())
+            }
+        }(template)
+    }
+
+    wg.Wait()
 }
 
 func LoadRequestTemplates(directory string) (map[string]RequestTemplate, error) {
+	Logger.Infof("loading request templates from: %s", directory)
+
 	templates := make(map[string]RequestTemplate)
 
 	if directory == "" {
