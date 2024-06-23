@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"smuggr.xyz/spammr/common/configurator"
 	"smuggr.xyz/spammr/common/logger"
 
 	"github.com/google/brotli/go/cbrotli"
@@ -18,7 +19,7 @@ import (
 var Logger = logger.NewCustomLogger("requ")
 var RequestTemplates map[string]RequestTemplate
 
-func Initialize() {
+func Initialize(cmdFlags configurator.CmdFlags) {
 	Logger.Log(logger.MsgInitializing)
 
 	if requestTemplates, err := LoadRequestTemplates(""); err != nil {
