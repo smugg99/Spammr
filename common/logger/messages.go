@@ -3,9 +3,9 @@ package logger
 type Resource string
 
 const (
-	ResourceRequestTemplate  Resource = "REQUEST_TEMPLATE"
-	ResourceConfig           Resource = "CONFIG"
-	ResourceEnv              Resource = "ENV"
+	ResourceAutomator Resource = "AUTOMATOR"
+	ResourceConfig    Resource = "CONFIG"
+	ResourceEnv       Resource = "ENV"
 )
 
 // Resource messages
@@ -52,5 +52,6 @@ var (
 var (
 	ErrInitializing      = NewMessageWrapper("ErrInitializing", "error initializing: %s", ErrorLevel)
 	ErrCleaningUp        = NewMessageWrapper("ErrCleaningUp", "error cleaning up: %s", ErrorLevel)
-
+	ErrEnvVariableNotSet = NewMessageWrapper("ErrEnvVariableNotSet", "environment variable not set: %s", ErrorLevel)
+	ErrUnknownActionType = NewMessageWrapper("ErrUnknownActionType", "unknown action type: %s", ErrorLevel)
 )

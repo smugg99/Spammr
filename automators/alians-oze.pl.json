@@ -1,0 +1,23 @@
+{
+  "actions": [
+    {
+      "action": "navigate",
+      "selector": "https://alians-oze.pl/kontakt/"
+    },
+    {
+      "action": "wait",
+      "selector": "label[for*= \"forminator-field-name-1\"]",
+      "duration": 1000
+    },
+    {
+      "action": "fill",
+      "selector": "input[type=\"text\"][placeholder*= \"Jan Kowalski\"]",
+      "value": "{{name}}"
+    },
+    {
+      "action": "wait",
+      "duration": 10000
+    }
+  ],
+  "wants": ["hash", "boundary", "session_id", "name", "phone_number", "email"]
+}

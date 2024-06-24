@@ -42,9 +42,6 @@ func SetupRunCmd() {
 	RunCmd.PersistentFlags().BoolVarP(&CmdFlags.IsVerbose, "verbose", "v", verboseDefault, "Enable verbose mode")
 	RunCmd.Flags().StringVarP(&CmdFlags.RequestsDir, "requests-dir", "d", os.Getenv("REQUEST_TEMPLATES_DIRECTORY"), "Directory path for request files")
 
-	RunCmd.Flags().StringVarP(&CmdFlags.Want.Hash, "hash", "x", "", "Specify the desired hash (10 character long random string e.g. 'a450a03cb5')")
-	RunCmd.Flags().StringVarP(&CmdFlags.Want.Boundary, "boundary", "b", "", "Specify the desired boundary (16 character long random string e.g. '7MA4YsWxkTrZu0gW')")
-	RunCmd.Flags().StringVarP(&CmdFlags.Want.SessionID, "session-id", "s", "", "Specify the desired session ID (10 character long random string e.g. '1sB4XL6kS9')")
 	RunCmd.Flags().StringVarP(&CmdFlags.Want.Name, "name", "n", "", "Specify the desired name (first and last, e.g. 'John Doe')")
 	RunCmd.Flags().StringVarP(&CmdFlags.Want.FirstName, "first-name", "f", "", "Specify the desired first name (e.g. 'John')")
 	RunCmd.Flags().StringVarP(&CmdFlags.Want.LastName, "last-name", "l", "", "Specify the desired last name (e.g. 'Doe')")

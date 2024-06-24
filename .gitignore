@@ -20,7 +20,7 @@
 # Go workspace file
 go.work
 go.work.sum
-app
 build
 resources/alians.oze.pl.json
 core/requester
+tests

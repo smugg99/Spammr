@@ -1,9 +1,6 @@
 package configurator
 
 type CmdWant struct {
-	Hash        string
-	Boundary    string
-	SessionID   string
 	Name        string
 	FirstName   string
 	LastName    string
@@ -18,6 +15,10 @@ type CmdFlags struct {
 	Want 		CmdWant
 }
 
-type GlobalConfig struct {
+type AutomatorConfig struct {
+	Headless bool `mapstructure:"headless"`
+}
 
+type GlobalConfig struct {
+	Automator AutomatorConfig `mapstructure:"automator"`
 }
