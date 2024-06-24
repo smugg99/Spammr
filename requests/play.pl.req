@@ -1,0 +1,21 @@
+{
+  "method": "POST",
+  "url": "https://www.play.pl/formularz-kontaktowy?_hn:type=resource&_hn:ref=r116_r2_r8&_hn:rid=pageLoadEvent&msisdn={{phone_number}}&firstName={{name}}&phoneContactConsent=on",
+  "headers": {
+    "Connection": "keep-alive",
+    "sec-ch-ua": "\"Not/A)Brand\";v=\"8\", \"Chromium\";v=\"126\"",
+    "sec-ch-ua-mobile": "?0",
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+    "sec-ch-ua-platform": "\"Linux\"",
+    "Accept": "*/*",
+    "Origin": "https://www.play.pl",
+    "Sec-Fetch-Site": "same-origin",
+    "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Dest": "empty",
+    "Referer": "https://www.play.pl/formularz-kontaktowy?msisdn={{phone_number}}&firstName={{name}}&phoneContactConsent=on",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Cookie": "deeb749b3ac1942abf421ffbc3f55a98={{cookie1}}; TS01dbb87c={{cookie2}}; portalId=23f9851e-fff9-411a-9bd7-993f9d341b21; TS01f7bd58={{cookie4}}; TS4dea46b6027={{cookie5}}"
+  },
+  "body": "",
+  "wants": ["cookie1", "cookie2", "cookie3", "cookie4", "cookie5", "phone_number", "name"]
+}

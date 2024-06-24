@@ -1,0 +1,24 @@
+{
+  "method": "",
+  "url": "",
+  "headers": {
+    "sec-ch-ua": "",
+    "accept": "",
+    "content-type": "",
+    "x-requested-with": "",
+    "sec-ch-ua-mobile": "",
+    "user-agent": "",
+    "sec-ch-ua-platform": "",
+    "origin": "",
+    "sec-fetch-site": "",
+    "sec-fetch-mode": "",
+    "sec-fetch-dest": "",
+    "referer": "",
+    "accept-encoding": "",
+    "accept-language": "",
+    "cookie": "",
+    "priority": ""
+  },
+  "body": "",
+  "wants": [""]
+}

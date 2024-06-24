@@ -20,10 +20,10 @@ import (
 var Logger = logger.NewCustomLogger("requ")
 var RequestTemplates map[string]RequestTemplate
 
-func Initialize(cmdFlags configurator.CmdFlags) {
+func Initialize(cmdFlags *configurator.CmdFlags) {
 	Logger.Log(logger.MsgInitializing)
 
-	if requestTemplates, err := LoadRequestTemplates(cmdFlags.RequestsDir); err != nil {
+	if requestTemplates, err := LoadRequestTemplates(cmdFlags); err != nil {
 		Logger.Errorf("failed to load request templates: %v", err.Error())
 	} else {
 		RequestTemplates = requestTemplates
@@ -31,49 +31,54 @@ func Initialize(cmdFlags configurator.CmdFlags) {
 
 	Logger.Log(logger.MsgInitialized)
 
-	SendRequests()
+	SendRequests(*cmdFlags)
 }
 
-func SendRequests() {
+func SendRequests(cmdFlags configurator.CmdFlags) {
     var wg sync.WaitGroup
 
     for _, template := range RequestTemplates {
         wg.Add(1)
         go func(template RequestTemplate) {
             defer wg.Done()
-            if _, err := SendRequest(&template); err != nil {
-                Logger.Printf("failed to send request template: %v", err.Error())
-            }
+			
+			if generatedRequest, err := GenerateRequest(&template, cmdFlags); err != nil {
+				Logger.Printf("failed to generate request template: %v", err.Error())
+			} else {
+				if _, err := SendRequest(generatedRequest); err != nil {
+					Logger.Printf("failed to send request template: %v", err.Error())
+				}
+			}
         }(template)
     }
 
     wg.Wait()
 }
 
-func LoadRequestTemplates(directory string) (map[string]RequestTemplate, error) {
-	Logger.Infof("loading request templates from: %s", directory)
+func LoadRequestTemplates(cmdFlags *configurator.CmdFlags) (map[string]RequestTemplate, error) {
+	Logger.Infof("loading request templates from: %s", cmdFlags.RequestsDir)
 
 	templates := make(map[string]RequestTemplate)
 
-	if directory == "" {
-		directory = os.Getenv("REQUEST_TEMPLATES_DIRECTORY")
+	if cmdFlags.RequestsDir == "" {
+		cmdFlags.RequestsDir = os.Getenv("REQUEST_TEMPLATES_DIRECTORY")
 	}
 
-	files, err := os.ReadDir(directory)
+	files, err := os.ReadDir(cmdFlags.RequestsDir)
 	if err != nil {
 		Logger.Errorf("failed to read directory: %v", err.Error())
 		return nil, err
 	}
 
 	if len(files) == 0 {
-		Logger.Warn(logger.ErrResourcesDirectoryEmpty.Format(directory))
+		Logger.Warn(logger.ErrResourcesDirectoryEmpty.Format(cmdFlags.RequestsDir))
 	}
 
 	for _, file := range files {
 		if filepath.Ext(file.Name()) == os.Getenv("REQUEST_TEMPLATE_EXTENSION") {
 			Logger.Info(logger.MsgLoadingResource.Format(file.Name(), logger.ResourceRequestTemplate))
 
-			filePath := filepath.Join(directory, file.Name())
+			filePath := filepath.Join(cmdFlags.RequestsDir, file.Name())
 			data, err := os.ReadFile(filePath)
 			if err != nil {
 				Logger.Error(err.Error())
@@ -97,12 +102,14 @@ func LoadRequestTemplates(directory string) (map[string]RequestTemplate, error) 
 	return templates, nil
 }
 
-func GenerateRequest(template *RequestTemplate, has map[Want]string) (*RequestTemplate, error) {
+func GenerateRequest(template *RequestTemplate, cmdFlags configurator.CmdFlags) (*RequestTemplate, error) {
+	replacements := GenerateReplacements(template.Wants, cmdFlags)
+
 	for key, value := range template.Headers {
-		template.Headers[key] = ReplacePlaceholders(value, template.Wants, has)
+		template.Headers[key] = ReplacePlaceholders(value, replacements)
 	}
 
-	template.Body = ReplacePlaceholders(template.Body, template.Wants, has)
+	template.Body = ReplacePlaceholders(template.Body, replacements)
 
 	Logger.Debug("generated request body:", template.Body)
 

@@ -18,7 +18,7 @@ var (
 	RunCmd     *cobra.Command
 )
 
-var CmdFlags configurator.CmdFlags
+var CmdFlags *configurator.CmdFlags
 
 func Initialize(runFunc func(cmd *cobra.Command, args []string)) {
 	RunFunc = runFunc

@@ -3,6 +3,7 @@ package requester
 type Want string
 
 const (
+	WantHash        Want = "hash"
 	WantBoundary    Want = "boundary"
 	WantSessionID   Want = "session_id"
 	WantName        Want = "name"

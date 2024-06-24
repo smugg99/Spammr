@@ -1,6 +1,7 @@
 package configurator
 
 type CmdWant struct {
+	Hash        string
 	Boundary    string
 	SessionID   string
 	Name        string
