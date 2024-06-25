@@ -19,12 +19,14 @@ var (
 
 // Uncategorizated messages
 var (
-	MsgLoadingResource = NewMessageWrapper("MsgLoadingResource", "loading resource %s (%s)", InfoLevel)
-	MsgResourceLoaded  = NewMessageWrapper("MsgResourceLoaded", "resource %s (%s) loaded", InfoLevel)
-	MsgInitializing    = NewMessageWrapper("MsgInitializing", "initializing", InfoLevel)
-	MsgCleaningUp      = NewMessageWrapper("MsgCleaningUp", "cleaning up", InfoLevel)
-	MsgInitialized     = NewMessageWrapper("MsgInitialized", "initialized", InfoLevel)
-	MsgCleanedUp       = NewMessageWrapper("MsgCleanedUp", "cleaned up", InfoLevel)
+	MsgAutomatorSuccess = NewMessageWrapper("MsgAutomatorSuccess", "automator %s completed successfully", SuccessLevel)
+	MsgEnterYesOrNo     = NewMessageWrapper("MsgEnterYesOrNo", "press 'Y' or 'YES' to continue, 'N' or 'NO' to exit: ", InfoLevel)
+	MsgLoadingResource  = NewMessageWrapper("MsgLoadingResource", "loading resource %s (%s)", InfoLevel)
+	MsgResourceLoaded   = NewMessageWrapper("MsgResourceLoaded", "resource %s (%s) loaded", InfoLevel)
+	MsgInitializing     = NewMessageWrapper("MsgInitializing", "initializing", InfoLevel)
+	MsgCleaningUp       = NewMessageWrapper("MsgCleaningUp", "cleaning up", InfoLevel)
+	MsgInitialized      = NewMessageWrapper("MsgInitialized", "initialized", InfoLevel)
+	MsgCleanedUp        = NewMessageWrapper("MsgCleanedUp", "cleaned up", InfoLevel)
 )
 
 // Database errors
@@ -57,6 +59,7 @@ var (
 	ErrMarshallingAutomator	      = NewMessageWrapper("ErrMarshallingAutomator", "error marshalling automator %s: %v", ErrorLevel)
 	ErrActionReturnedFalse        = NewMessageWrapper("ErrActionReturnedFalse", "action returned false", ErrorLevel)
 	ErrUserChoseToExit            = NewMessageWrapper("ErrUserChoseToExit", "user chose to exit", ErrorLevel)
+	ErrInvalidYesOrNoInput        = NewMessageWrapper("ErrInvalidUserInput", "invalid input, please enter 'Y' or 'YES' to continue, 'N' or 'NO' to exit: ", ErrorLevel)
 	ErrActionFailed		          = NewMessageWrapper("ErrActionFailed", "action %s failed: %v", ErrorLevel)
 	ErrAutomatorError             = NewMessageWrapper("ErrAutomatorError", "automator %s failed with error: %v", ErrorLevel)
 	ErrUnsupportedActionValueType = NewMessageWrapper("ErrUnsupportedActionValueType", "unsupported return action value type", ErrorLevel)

@@ -70,7 +70,9 @@ func Initialize(verbose bool) {
 
 	if verbose {
 		DefaultLogger.Debug("running in verbose mode")
-		DefaultLogger.SetLevel(log.DebugLevel)
+		log.SetLevel(log.DebugLevel)
+	} else {
+		log.SetLevel(log.ErrorLevel)
 	}
 
 	log.SetStyles(GetDefaultLoggerStyle())

@@ -121,6 +121,8 @@ func Initialize(cmdFlags *configurator.CmdFlags) {
 
 		if err := RunAutomator(ctx, &automator); err != nil {
 			Logger.Log(logger.ErrAutomatorError.Format(automator.Name, err))
+		} else {
+			Logger.Log(logger.MsgAutomatorSuccess.Format(automator.Name))
 		}
 	}
 }

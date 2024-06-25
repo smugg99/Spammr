@@ -65,10 +65,10 @@ func printAction(value interface{}) error {
 }
 
 func promptConfirm() bool {
+	ProgressLogger.Progress(logger.MsgEnterYesOrNo)
+
 	reader := bufio.NewReader(os.Stdin)
 	for {
-		ProgressLogger.Progress("Press 'Y' or 'YES' to continue, 'N' or 'NO' to exit: ")
-
 		input, err := reader.ReadString('\n')
 		if err != nil {
 			ProgressLogger.ProgressError("Error reading input:", err)
@@ -83,7 +83,7 @@ func promptConfirm() bool {
 		case "N", "NO":
 			return false
 		default:
-			ProgressLogger.ProgressError("Invalid input. Please enter 'Y' or 'YES' to continue, 'N' or 'NO' to exit.")
+			ProgressLogger.ProgressError(logger.ErrInvalidYesOrNoInput)
 		}
 	}
 }
