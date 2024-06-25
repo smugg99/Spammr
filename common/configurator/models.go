@@ -16,7 +16,9 @@ type CmdFlags struct {
 }
 
 type AutomatorConfig struct {
-	Headless bool `mapstructure:"headless"`
+	Headless    bool `mapstructure:"headless"`
+	AttachDebug bool `mapstructure:"attach_debug"`
+	AttachLog 	bool `mapstructure:"attach_log"`
 }
 
 type GlobalConfig struct {

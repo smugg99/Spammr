@@ -50,8 +50,11 @@ var (
 
 // Uncategorized errors
 var (
-	ErrInitializing      = NewMessageWrapper("ErrInitializing", "error initializing: %s", ErrorLevel)
-	ErrCleaningUp        = NewMessageWrapper("ErrCleaningUp", "error cleaning up: %s", ErrorLevel)
-	ErrEnvVariableNotSet = NewMessageWrapper("ErrEnvVariableNotSet", "environment variable not set: %s", ErrorLevel)
-	ErrUnknownActionType = NewMessageWrapper("ErrUnknownActionType", "unknown action type: %s", ErrorLevel)
+	ErrInitializing               = NewMessageWrapper("ErrInitializing", "error initializing: %s", ErrorLevel)
+	ErrCleaningUp                 = NewMessageWrapper("ErrCleaningUp", "error cleaning up: %s", ErrorLevel)
+	ErrEnvVariableNotSet          = NewMessageWrapper("ErrEnvVariableNotSet", "environment variable not set: %s", ErrorLevel)
+	ErrUnknownActionType          = NewMessageWrapper("ErrUnknownActionType", "unknown action type: %s", ErrorLevel)
+	ErrActionReturnedFalse        = NewMessageWrapper("ErrActionReturnedFalse", "action returned false", ErrorLevel)
+	ErrActionFailed		          = NewMessageWrapper("ErrActionFailed", "action %s failed: %v", ErrorLevel)
+	ErrUnsupportedActionValueType = NewMessageWrapper("ErrUnsupportedActionValueType", "unsupported return action value type", ErrorLevel)
 )

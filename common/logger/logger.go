@@ -13,6 +13,9 @@ const (
 	DebugLevel LogLevel = iota
 	InfoLevel
 	SuccessLevel
+	ProgressLevel
+	ProgressErrorLevel
+	ProgressDebugLevel
 	WarnLevel
 	ErrorLevel
 	FatalLevel
@@ -23,22 +26,18 @@ type CustomLogger struct {
 }
 
 func (l LogLevel) String() string {
-	return [...]string{"DEBUG", "INFO", "SUCCESS", "WARN", "ERROR", "FATAL"}[l]
-}
-
-func (c *CustomLogger) Success(msg interface{}, keyvals ...interface{}) {
-	c.Logger.Log(log.Level(SuccessLevel), msg, keyvals...)
-}
-
-func (c *CustomLogger) Successf(format string, args ...interface{}) {
-	c.Logger.Log(log.Level(SuccessLevel), fmt.Sprintf(format, args...))
+	return [...]string{"DEBUG", "INFO", "SUCCESS", "PROGRESS", "PROGRESS_ERROR", "PROGRESS_DEBUG", "WARN", "ERROR", "FATAL"}[l]
 }
 
 func NewCustomLogger(packageName string) *CustomLogger {
 	logger := log.New(os.Stdout)
-
 	logger.SetLevel(log.DebugLevel)
-	logger.SetStyles(GetPackageLoggerStyle(packageName))
+
+	if packageName == "" {
+		logger.SetStyles(GetDefaultLoggerStyle())
+	} else {
+		logger.SetStyles(GetPackageLoggerStyle(packageName))
+	}
 
 	return &CustomLogger{Logger: logger}
 }
@@ -53,6 +52,8 @@ func (c *CustomLogger) Log(message *MessageWrapper) {
 		c.Info(message.Message)
 	case SuccessLevel:
 		c.Success(message.Message)
+	case ProgressLevel:
+		c.Progress(message.Message)
 	case WarnLevel:
 		c.Warn(message.Message)
 	case ErrorLevel:
@@ -73,4 +74,36 @@ func Initialize(verbose bool) {
 	}
 
 	log.SetStyles(GetDefaultLoggerStyle())
+}
+
+func (c *CustomLogger) Success(msg interface{}, keyvals ...interface{}) {
+	c.Logger.Log(log.Level(SuccessLevel), msg, keyvals...)
+}
+
+func (c *CustomLogger) Successf(format string, args ...interface{}) {
+	c.Logger.Log(log.Level(SuccessLevel), fmt.Sprintf(format, args...))
+}
+
+func (c *CustomLogger) Progress(msg interface{}, keyvals ...interface{}) {
+	c.Logger.Log(log.Level(ProgressLevel), msg, keyvals...)
+}
+
+func (c *CustomLogger) Progressf(format string, args ...interface{}) {
+	c.Logger.Log(log.Level(ProgressLevel), fmt.Sprintf(format, args...))
+}
+
+func (c *CustomLogger) ProgressError(msg interface{}, keyvals ...interface{}) {
+	c.Logger.Log(log.Level(ProgressErrorLevel), msg, keyvals...)
+}
+
+func (c *CustomLogger) ProgressErrorf(format string, args ...interface{}) {
+	c.Logger.Log(log.Level(ProgressErrorLevel), fmt.Sprintf(format, args...))
+}
+
+func (c *CustomLogger) ProgressDebug(msg interface{}, keyvals ...interface{}) {
+	c.Logger.Log(log.Level(ProgressDebugLevel), msg, keyvals...)
+}
+
+func (c *CustomLogger) ProgressDebugf(format string, args ...interface{}) {
+	c.Logger.Log(log.Level(ProgressDebugLevel), fmt.Sprintf(format, args...))
 }

@@ -1,5 +1,7 @@
 {
 	"automator": {
-		"headless": false
+		"headless": false,
+		"attach_debug": false,
+		"attach_log": true
 	}
 }

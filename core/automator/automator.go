@@ -2,6 +2,8 @@ package automator
 
 import (
 	"context"
+	"os"
+	"path/filepath"
 
 	"smuggr.xyz/spammr/common/configurator"
 	"smuggr.xyz/spammr/common/logger"
@@ -10,27 +12,79 @@ import (
 )
 
 var Logger = logger.NewCustomLogger("auto")
+var ProgressLogger = logger.NewCustomLogger("")
+
 var Config *configurator.AutomatorConfig
 
 var Automators map[string]Automator
 
-func SetupBrowser(ctx context.Context, config *configurator.AutomatorConfig) (context.Context, context.CancelFunc) {
+func SetupBrowser() (context.Context, context.CancelFunc) {
 	opts := append(chromedp.DefaultExecAllocatorOptions[:],
-		chromedp.Flag("headless", config.Headless),
+		chromedp.Flag("headless", Config.Headless),
 	)
 
 	actx, acancel := chromedp.NewExecAllocator(context.Background(), opts...)
 
 	ctx, cancel := chromedp.NewContext(
 		actx,
-		chromedp.WithDebugf(Logger.Printf),
-		chromedp.WithLogf(Logger.Printf),
+		chromedp.WithDebugf(func(format string, args ...interface{}) {
+			if Config.AttachDebug {
+				Logger.Printf(format, args...)
+			}
+		}),
+		chromedp.WithLogf(func(format string, args ...interface{}) {
+			if Config.AttachLog {
+				Logger.Printf(format, args...)
+			}
+		}),
 	)
 
 	return ctx, func() {
 		cancel()
 		acancel()
 	}
+}
+
+func LoadAutomatorFiles() (map[string]Automator, error) {
+	_directory := "AUTOMATORS_DIRECTORY"
+	directory := os.Getenv(_directory)
+	if directory == "" {
+		return nil, logger.ErrEnvVariableNotSet.Format(_directory)
+	}
+
+	files, err := os.ReadDir(directory)
+	if err != nil {
+		return nil, err
+	}
+
+	_automators_ext := "AUTOMATOR_FILE_EXTENSION"
+	automators_ext := os.Getenv(_automators_ext)
+	if directory == "" {
+		return nil, logger.ErrEnvVariableNotSet.Format(_directory)
+	}
+
+	automators := make(map[string]Automator)
+
+	for _, file := range files {
+		filename := file.Name()
+		if !file.IsDir() && filepath.Ext(filename) == automators_ext {
+			filePath := filepath.Join(directory, filename)
+
+			Logger.Info(logger.MsgLoadingResource.Format(filePath, logger.ResourceAutomator))
+
+			automator, err := readAutomatorFromFile(filePath)
+			if err != nil {
+				Logger.Error(logger.ErrReadingResource.Format(filePath, logger.ResourceAutomator))
+				return nil, err
+			}
+
+			automators[filename] = automator
+
+			Logger.Debugf("automator %s loaded: %v", filename, automator)
+		}
+	}
+
+	return automators, nil
 }
 
 func Initialize(cmdFlags *configurator.CmdFlags) {
@@ -45,11 +99,11 @@ func Initialize(cmdFlags *configurator.CmdFlags) {
 	}
 
 	for _, automator := range Automators {
-		ctx, cancel := SetupBrowser(context.Background(), Config)
+		ctx, cancel := SetupBrowser()
 		defer cancel()
 
 		if err := RunAutomator(ctx, &automator); err != nil {
-			Logger.Fatal(err)
+			ProgressLogger.ProgressError(err)
 		}
 	}
 }

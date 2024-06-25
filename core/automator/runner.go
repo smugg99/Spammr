@@ -3,8 +3,9 @@ package automator
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"os"
-	"path/filepath"
+	"time"
 
 	"smuggr.xyz/spammr/common/logger"
 )
@@ -23,67 +24,47 @@ func readAutomatorFromFile(filePath string) (Automator, error) {
 	return automator, nil
 }
 
-func LoadAutomatorFiles() (map[string]Automator, error) {
-	_directory := "AUTOMATORS_DIRECTORY"
-	directory := os.Getenv(_directory)
-	if directory == "" {
-		return nil, logger.ErrEnvVariableNotSet.Format(_directory)
+func runAction(ctx context.Context, action Action) error {
+	switch action.Type {
+	case ActionNavigate:
+		return navigateAction(ctx, action.Selector)
+	case ActionWait:
+		return waitAction(ctx, action.Selector, action.Duration)
+	case ActionFill:
+		return fillAction(ctx, action.Selector, fmt.Sprintf("%v", action.Value))
+	case ActionReturn:
+		return returnAction(action.Value)
+	case ActionPrint:
+		return printAction(action.Value)
+	default:
+		return logger.ErrUnknownActionType.Format(action.Type)
 	}
+}
 
-	files, err := os.ReadDir(directory)
-	if err != nil {
-		return nil, err
-	}
+func executeActions(ctx context.Context, actions []Action) error {
+	for index, action := range actions {
+		start := time.Now()
+		ProgressLogger.Progressf("[%d] %s", index, action.Type)
 
-	_automators_ext := "AUTOMATOR_FILE_EXTENSION"
-	automators_ext := os.Getenv(_automators_ext)
-	if directory == "" {
-		return nil, logger.ErrEnvVariableNotSet.Format(_directory)
-	}
+		if err := runAction(ctx, action); err != nil {
+			// duration := time.Since(start)
 
-	automators := make(map[string]Automator)
-
-	for _, file := range files {
-		filename := file.Name()
-		if !file.IsDir() && filepath.Ext(filename) == automators_ext {
-			filePath := filepath.Join(directory, filename)
-
-			Logger.Info(logger.MsgLoadingResource.Format(filePath, logger.ResourceAutomator))
-
-			automator, err := readAutomatorFromFile(filePath)
-			if err != nil {
-				Logger.Error(logger.ErrReadingResource.Format(filePath, logger.ResourceAutomator))
-				return nil, err
+			// ProgressLogger.ProgressErrorf("[%d] %s failed after %v: %v", index, action.Type, duration, err)
+			
+			if err := onFailure(ctx, action); err != nil {
+				return err
 			}
 
-			automators[filename] = automator
-
-			Logger.Debugf("automator %s loaded: %v", filename, automator)
+			return err
 		}
-	}
 
-	return automators, nil
+		duration := time.Since(start)
+		ProgressLogger.ProgressDebugf("[%d] %s completed in %v", index, action.Type, duration)
+	}
+	return nil
 }
 
 func RunAutomator(ctx context.Context, automator *Automator) error {
-	for _, action := range automator.Actions {
-		switch action.Type {
-		case ActionNavigate:
-			if err := navigateAction(ctx, action.Selector); err != nil {
-				return err
-			}
-		case ActionWait:
-			if err := waitAction(ctx, action.Selector, action.Duration); err != nil {
-				return err
-			}
-		case ActionFill:
-			if err := fillAction(ctx, action.Selector, action.Value); err != nil {
-				return err
-			}
-		default:
-			return logger.ErrUnknownActionType.Format(action.Type)
-		}
-	}
-	
-	return nil
+	ProgressLogger.Progressf("[%s]", automator.Name)
+	return executeActions(ctx, automator.Actions)
 }

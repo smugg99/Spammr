@@ -7,6 +7,8 @@ const (
 	ActionNavigate ActionType = "navigate"
 	ActionWait     ActionType = "wait"
 	ActionFill     ActionType = "fill"
+	ActionReturn   ActionType = "return"
+	ActionPrint    ActionType = "print"
 )
 
 const (
@@ -19,13 +21,15 @@ const (
 )
 
 type Action struct {
-	Type     ActionType `json:"action"`
-	Selector string     `json:"selector"`
-	Duration int        `json:"duration"`
-	Value    string     `json:"value"`
+	Type      ActionType  `json:"action"`
+	Selector  string      `json:"selector,omitempty"`
+	Duration  int         `json:"duration,omitempty"`
+	Value     interface{} `json:"value,omitempty"`
+	OnFailure []Action    `json:"onFailure,omitempty"`
 }
 
 type Automator struct {
+	Name    string   `json:"name"`
 	Actions []Action `json:"actions"`
 	Wants   []string `json:"wants"`
 }

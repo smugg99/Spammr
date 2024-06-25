@@ -1,4 +1,5 @@
 {
+  "name": "Alians OZE",
   "actions": [
     {
       "action": "navigate",
@@ -7,7 +8,13 @@
     {
       "action": "wait",
       "selector": "label[for*= \"forminator-field-name-1\"]",
-      "duration": 1000
+      "duration": 1000,
+      "onFailure": [
+        {
+          "action": "return",
+          "value": false
+        }
+      ]
     },
     {
       "action": "fill",
@@ -16,8 +23,27 @@
     },
     {
       "action": "wait",
-      "duration": 10000
+      "duration": 1000
+    },
+    {
+      "action": "wait",
+      "selector": "div[role=\"alert\"][aria-live=\"polite\"].forminator-response-message.forminator-show.forminator-success[style*=\"display: inline\"]",
+      "duration": 1000,
+      "onFailure": [
+        {
+          "action": "print",
+          "value": "success dialog not found"
+        },
+        {
+          "action": "return",
+          "value": false
+        }
+      ]
+    },
+    {
+      "action": "return",
+      "value": true
     }
   ],
-  "wants": ["hash", "boundary", "session_id", "name", "phone_number", "email"]
+  "wants": ["name", "phone_number", "email"]
 }
