@@ -2,6 +2,7 @@ package automator
 
 import (
 	"context"
+	"encoding/json"
 	"os"
 	"path/filepath"
 
@@ -17,6 +18,20 @@ var ProgressLogger = logger.NewCustomLogger("")
 var Config *configurator.AutomatorConfig
 
 var Automators map[string]Automator
+
+func readAutomatorFromFile(filePath string) (Automator, error) {
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		return Automator{}, err
+	}
+
+	var automator Automator
+	if err := json.Unmarshal(data, &automator); err != nil {
+		return Automator{}, err
+	}
+
+	return automator, nil
+}
 
 func SetupBrowser() (context.Context, context.CancelFunc) {
 	opts := append(chromedp.DefaultExecAllocatorOptions[:],
@@ -45,7 +60,7 @@ func SetupBrowser() (context.Context, context.CancelFunc) {
 	}
 }
 
-func LoadAutomatorFiles() (map[string]Automator, error) {
+func LoadAutomatorFiles(cmdFlags *configurator.CmdFlags) (map[string]Automator, error) {
 	_directory := "AUTOMATORS_DIRECTORY"
 	directory := os.Getenv(_directory)
 	if directory == "" {
@@ -80,7 +95,7 @@ func LoadAutomatorFiles() (map[string]Automator, error) {
 
 			automators[filename] = automator
 
-			Logger.Debugf("automator %s loaded: %v", filename, automator)
+			Logger.Log(logger.MsgResourceLoaded.Format(filePath, logger.ResourceAutomator))
 		}
 	}
 
@@ -93,7 +108,7 @@ func Initialize(cmdFlags *configurator.CmdFlags) {
 	Config = &configurator.Config.Automator
 
 	var err error
-	Automators, err = LoadAutomatorFiles()
+	Automators, err = LoadAutomatorFiles(cmdFlags)
 	if err != nil {
 		Logger.Fatal(err)
 	}
@@ -101,6 +116,8 @@ func Initialize(cmdFlags *configurator.CmdFlags) {
 	for _, automator := range Automators {
 		ctx, cancel := SetupBrowser()
 		defer cancel()
+
+		ReplacePlaceholders(&automator, cmdFlags)
 
 		if err := RunAutomator(ctx, &automator); err != nil {
 			Logger.Log(logger.ErrAutomatorError.Format(automator.Name, err))

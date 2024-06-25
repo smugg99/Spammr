@@ -2,32 +2,16 @@ package automator
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"os"
 	"time"
 
 	"smuggr.xyz/spammr/common/logger"
 )
 
-func readAutomatorFromFile(filePath string) (Automator, error) {
-	data, err := os.ReadFile(filePath)
-	if err != nil {
-		return Automator{}, err
-	}
-
-	var automator Automator
-	if err := json.Unmarshal(data, &automator); err != nil {
-		return Automator{}, err
-	}
-
-	return automator, nil
-}
-
 func runAction(ctx context.Context, action Action) error {
 	switch action.Type {
 	case ActionNavigate:
-		return navigateAction(ctx, action.Selector)
+		return navigateAction(ctx, action.Value)
 	case ActionWait:
 		return waitAction(ctx, action.Selector, action.Duration)
 	case ActionFill:

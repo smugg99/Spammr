@@ -54,6 +54,7 @@ var (
 	ErrCleaningUp                 = NewMessageWrapper("ErrCleaningUp", "error cleaning up: %s", ErrorLevel)
 	ErrEnvVariableNotSet          = NewMessageWrapper("ErrEnvVariableNotSet", "environment variable not set: %s", ErrorLevel)
 	ErrUnknownActionType          = NewMessageWrapper("ErrUnknownActionType", "unknown action type: %s", ErrorLevel)
+	ErrMarshallingAutomator	      = NewMessageWrapper("ErrMarshallingAutomator", "error marshalling automator %s: %v", ErrorLevel)
 	ErrActionReturnedFalse        = NewMessageWrapper("ErrActionReturnedFalse", "action returned false", ErrorLevel)
 	ErrActionFailed		          = NewMessageWrapper("ErrActionFailed", "action %s failed: %v", ErrorLevel)
 	ErrAutomatorError             = NewMessageWrapper("ErrAutomatorError", "automator %s failed with error: %v", ErrorLevel)

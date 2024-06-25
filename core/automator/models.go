@@ -29,7 +29,8 @@ type Action struct {
 }
 
 type Automator struct {
-	Name    string   `json:"name"`
-	Actions []Action `json:"actions"`
-	Wants   []string `json:"wants"`
+	Name    string          `json:"name"`
+	Actions []Action        `json:"actions"`
+	Wants   []string        `json:"wants"`
+	Has     map[string]Want `json:"-"`
 }

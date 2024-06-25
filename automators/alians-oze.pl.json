@@ -2,8 +2,12 @@
   "name": "Alians OZE",
   "actions": [
     {
+      "action": "print",
+      "value": "{{name}}, {{phone_number}}, {{email}}"
+    },
+    {
       "action": "navigate",
-      "selector": "https://alians-oze.pl/kontakt/"
+      "value": "https://alians-oze.pl/kontakt/"
     },
     {
       "action": "wait",

@@ -8,8 +8,13 @@ import (
 	"smuggr.xyz/spammr/common/logger"
 )
 
-func navigateAction(ctx context.Context, url string) error {
-	return chromedp.Run(ctx, chromedp.Navigate(url))
+func navigateAction(ctx context.Context, url interface{}) error {
+	switch v := url.(type) {
+	case string:
+		return chromedp.Run(ctx, chromedp.Navigate(v))
+	}
+
+	return logger.ErrUnsupportedActionValueType
 }
 
 func waitAction(ctx context.Context, selector string, duration int) error {
@@ -46,10 +51,9 @@ func returnAction(value interface{}) error {
 		if v != "true" {
 			return logger.ErrActionReturnedFalse
 		}
-	default:
-		return logger.ErrUnsupportedActionValueType
 	}
-	return nil
+	
+	return logger.ErrUnsupportedActionValueType
 }
 
 func printAction(value interface{}) error {
