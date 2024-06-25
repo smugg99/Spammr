@@ -23,10 +23,6 @@
     },
     {
       "action": "wait",
-      "duration": 1000
-    },
-    {
-      "action": "wait",
       "selector": "div[role=\"alert\"][aria-live=\"polite\"].forminator-response-message.forminator-show.forminator-success[style*=\"display: inline\"]",
       "duration": 1000,
       "onFailure": [

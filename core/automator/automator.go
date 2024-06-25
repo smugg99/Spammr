@@ -103,7 +103,7 @@ func Initialize(cmdFlags *configurator.CmdFlags) {
 		defer cancel()
 
 		if err := RunAutomator(ctx, &automator); err != nil {
-			ProgressLogger.ProgressError(err)
+			Logger.Log(logger.ErrAutomatorError.Format(automator.Name, err))
 		}
 	}
 }

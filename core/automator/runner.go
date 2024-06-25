@@ -47,19 +47,14 @@ func executeActions(ctx context.Context, actions []Action) error {
 		ProgressLogger.Progressf("[%d] %s", index, action.Type)
 
 		if err := runAction(ctx, action); err != nil {
-			// duration := time.Since(start)
+			ProgressLogger.ProgressErrorf("[%d] %s : %v [%v]", index, action.Type, err, time.Since(start))
 
-			// ProgressLogger.ProgressErrorf("[%d] %s failed after %v: %v", index, action.Type, duration, err)
-			
-			if err := onFailure(ctx, action); err != nil {
-				return err
-			}
+			onFailure(ctx, action)
 
 			return err
 		}
 
-		duration := time.Since(start)
-		ProgressLogger.ProgressDebugf("[%d] %s completed in %v", index, action.Type, duration)
+		ProgressLogger.ProgressDebugf("[%d] %s [%v]", index, action.Type, time.Since(start))
 	}
 	return nil
 }

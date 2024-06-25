@@ -56,5 +56,6 @@ var (
 	ErrUnknownActionType          = NewMessageWrapper("ErrUnknownActionType", "unknown action type: %s", ErrorLevel)
 	ErrActionReturnedFalse        = NewMessageWrapper("ErrActionReturnedFalse", "action returned false", ErrorLevel)
 	ErrActionFailed		          = NewMessageWrapper("ErrActionFailed", "action %s failed: %v", ErrorLevel)
+	ErrAutomatorError             = NewMessageWrapper("ErrAutomatorError", "automator %s failed with error: %v", ErrorLevel)
 	ErrUnsupportedActionValueType = NewMessageWrapper("ErrUnsupportedActionValueType", "unsupported return action value type", ErrorLevel)
 )
