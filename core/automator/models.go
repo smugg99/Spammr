@@ -9,6 +9,7 @@ const (
 	ActionFill     ActionType = "fill"
 	ActionReturn   ActionType = "return"
 	ActionPrint    ActionType = "print"
+	ActionConfirm  ActionType = "confirm"
 )
 
 const (

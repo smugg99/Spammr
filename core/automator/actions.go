@@ -1,7 +1,10 @@
 package automator
 
 import (
+	"bufio"
 	"context"
+	"os"
+	"strings"
 	"time"
 
 	"github.com/chromedp/chromedp"
@@ -52,13 +55,45 @@ func returnAction(value interface{}) error {
 			return logger.ErrActionReturnedFalse
 		}
 	}
-	
+
 	return logger.ErrUnsupportedActionValueType
 }
 
 func printAction(value interface{}) error {
 	ProgressLogger.Progress(value)
 	return nil
+}
+
+func promptConfirm() bool {
+	reader := bufio.NewReader(os.Stdin)
+	for {
+		ProgressLogger.Progress("Press 'Y' or 'YES' to continue, 'N' or 'NO' to exit: ")
+
+		input, err := reader.ReadString('\n')
+		if err != nil {
+			ProgressLogger.ProgressError("Error reading input:", err)
+			return false
+		}
+
+		input = strings.TrimSpace(strings.ToUpper(input))
+
+		switch input {
+		case "Y", "YES":
+			return true
+		case "N", "NO":
+			return false
+		default:
+			ProgressLogger.ProgressError("Invalid input. Please enter 'Y' or 'YES' to continue, 'N' or 'NO' to exit.")
+		}
+	}
+}
+
+func confirmAction() error {
+	if promptConfirm() {
+		return nil
+	}
+
+	return logger.ErrUserChoseToExit
 }
 
 func onFailure(ctx context.Context, action Action) error {

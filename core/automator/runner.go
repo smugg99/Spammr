@@ -20,6 +20,8 @@ func runAction(ctx context.Context, action Action) error {
 		return returnAction(action.Value)
 	case ActionPrint:
 		return printAction(action.Value)
+	case ActionConfirm:
+		return confirmAction()
 	default:
 		return logger.ErrUnknownActionType.Format(action.Type)
 	}

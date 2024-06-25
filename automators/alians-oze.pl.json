@@ -21,6 +21,9 @@
       ]
     },
     {
+      "action": "confirm"
+    },
+    {
       "action": "fill",
       "selector": "input[type=\"text\"][placeholder*= \"Jan Kowalski\"]",
       "value": "{{name}}"
